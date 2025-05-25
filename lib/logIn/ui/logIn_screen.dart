@@ -14,6 +14,13 @@ class LogInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: const BackButton(color: Colors.white),
+        title: const Text('Log In', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => FocusScope.of(context).unfocus(),
@@ -23,23 +30,6 @@ class LogInScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () {
-                        context.pop();
-                      },
-                    ),
-                    SizedBox(width: 100), // spacing between arrow and text
-                    Text(
-                      "Log In",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
-                  ],
-                ),
                 SizedBox(height: 24),
                 CustomTextField(
                   labelText: 'Email',
