@@ -2,8 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:moneywise/util/router/router.dart';
+import 'package:moneywise/util/service_locator.dart';
 
-void main(){
+void main()async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupServiceLocator();
   runApp(MyApp());
 }
 

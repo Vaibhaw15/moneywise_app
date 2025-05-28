@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:moneywise/addEditModule/ui/addEditScreen.dart';
-import 'package:moneywise/logIn/ui/logIn_screen.dart';
-import 'package:moneywise/signup/ui/signup_screen.dart';
-import 'package:moneywise/util/screen/splash_screen.dart';
+import 'package:moneywise/screens/logIn/bloc/LogInBloc.dart';
 
-import '../../history/ui/history_screen.dart';
-import '../../landing/ui/langing_screen.dart';
+import '../../Screens/addEditModule/ui/addEditScreen.dart';
+import '../../Screens/history/ui/history_screen.dart';
+import '../../Screens/landing/ui/langing_screen.dart';
+import '../../Screens/logIn/ui/logIn_screen.dart';
+import '../../Screens/signup/ui/signup_screen.dart';
 import '../screen/login_signup_screen.dart';
+import '../screen/splash_screen.dart';
 
 
 class RouterConfiguration {
@@ -28,7 +30,9 @@ class RouterConfiguration {
           GoRoute(
             path: '/login',
             builder: (BuildContext context, GoRouterState state) {
-              return LogInScreen();
+              return BlocProvider(
+                  create: (_) => LoginBloc(),
+                  child: LogInScreen());
             },
           ),
           GoRoute(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../networking/loginApi.dart';
 import '../component/button.dart';
 
 class LoginSignupScreen extends StatelessWidget {
@@ -58,6 +59,7 @@ class LoginSignupScreen extends StatelessWidget {
               text: 'Log In',
               color: Color(0xFF2E3829),
               onPressed: () {
+                LogInApi().login("vaibhaw15@gmail.com","11111111");
                 context.push('/login');
               },
             ),

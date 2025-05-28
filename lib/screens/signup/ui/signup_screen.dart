@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../util/component/button.dart';
-import '../../util/component/textfield.dart';
+import '../../../util/component/button.dart';
+import '../../../util/component/textfield.dart';
 
-class LogInScreen extends StatelessWidget {
-  LogInScreen({super.key});
+
+class SignUpScreen extends StatelessWidget {
+  SignUpScreen({super.key});
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -17,7 +18,7 @@ class LogInScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: const BackButton(color: Colors.white),
-        title: const Text('Log In', style: TextStyle(color: Colors.white)),
+        title: const Text('Register', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         elevation: 0,
       ),
@@ -32,6 +33,12 @@ class LogInScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 24),
                 CustomTextField(
+                  labelText: 'Name',
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                SizedBox(height: 16),
+                CustomTextField(
                   labelText: 'Email',
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -42,9 +49,15 @@ class LogInScreen extends StatelessWidget {
                   controller: passwordController,
                   isPassword: true,
                 ),
+                SizedBox(height: 16),
+                CustomTextField(
+                  labelText: 'Confirm Password',
+                  controller: passwordController,
+                  isPassword: true,
+                ),
                 SizedBox(height: 24),
                 CustomButton(
-                  text: 'Log In',
+                  text: 'Register',
                   color: Color(0xFF54D12B),
                   onPressed: () {
                     // Handle login logic
