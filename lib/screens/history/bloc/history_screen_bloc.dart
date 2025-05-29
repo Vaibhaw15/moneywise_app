@@ -1,0 +1,66 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import '../../../models/historyModel.dart';
+import '../../../networking/historyApi.dart';
+import '../../../packages/SharedPreferenceService.dart';
+import '../event/history_screen_event.dart';
+import '../state/history_screen_state.dart';
+class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
+  final HistoryApi repository;
+
+  HistoryBloc(this.repository) : super(HistoryInitial()) {
+    on<LoadTransactionHistory>(_onLoadTransactions);
+  }
+
+  Future<void> _onLoadTransactions(
+      LoadTransactionHistory event,
+      Emitter<HistoryState> emit,
+      ) async {
+    emit(HistoryLoading());
+
+    try {
+      // Get user credentials
+      final userId = SharedPreferenceService.getString("userId");
+      final token = SharedPreferenceService.getString("token");
+
+      if (userId == null || token == null) {
+        emit(HistoryError('User not authenticated.'));
+        return;
+      }
+
+      // Format date: "20250529"
+      final date = _getCurrentDateFormatted();
+
+      // Call API
+      final response = await repository.getTransactionHistory(userId: userId,date: date, token: token);
+
+      // Convert response to list of HistoryModel
+      final List<HistoryModel> transactions = response;
+
+
+      // Compute income and expenses
+      final income = transactions
+          .where((tx) => tx.categoryType == '2')
+          .fold<double>(0.0, (sum, tx) => sum + (tx.transactionAmount ?? 0.0));
+
+      final expenses = transactions
+          .where((tx) => tx.categoryType == '1')
+          .fold<double>(0.0, (sum, tx) => sum + (tx.transactionAmount ?? 0.0));
+
+      emit(HistoryLoaded(
+        transactions: transactions,
+        income: income,
+        expenses: expenses,
+      ));
+    } catch (e) {
+      emit(HistoryError('Failed to load transactions: $e'));
+    }
+  }
+
+  String _getCurrentDateFormatted() {
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyyMMdd');
+    return formatter.format(now); // → "20250529"
+  }
+}
+

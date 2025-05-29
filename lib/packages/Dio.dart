@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import 'SharedPreferenceService.dart';
+
 class ApiClient {
   final Dio dio;
 
@@ -21,9 +23,10 @@ class ApiClient {
 
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
+        final token = SharedPreferenceService.getString("token");
         // Skip Authorization for login path
         if (!options.path.contains('/auth/login') && !options.path.contains('/auth/createUser')) {
-          options.headers['Authorization'] = 'Bearer YOUR_TOKEN';
+          options.headers['Authorization'] = 'Bearer $token';
         }
         return handler.next(options);
       },

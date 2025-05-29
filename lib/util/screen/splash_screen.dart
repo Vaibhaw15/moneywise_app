@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../packages/SharedPreferenceService.dart';
+import 'login_signup_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,10 +19,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(const Duration(seconds: 3), () {
-        if (mounted) {
-          context.go('/loginSignup'); // Or your desired route
+      if (mounted) {
+        if(SharedPreferenceService.getString('token') == null) {
+          context.go('/loginSignup');
+        }else{
+          context.go('/landing');
         }
+      }
     });
   }
 

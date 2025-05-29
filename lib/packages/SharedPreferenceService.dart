@@ -13,38 +13,38 @@ class SharedPreferenceService {
   }
 
   // Save Methods
-  Future<void> setString(String key, String value) async {
+  static Future<void> setString(String key, String value) async {
     await _preferences?.setString(key, value);
   }
 
-  Future<void> setInt(String key, int value) async {
+  static Future<void> setInt(String key, int value) async {
     await _preferences?.setInt(key, value);
   }
 
-  Future<void> setBool(String key, bool value) async {
+  static Future<void> setBool(String key, bool value) async {
     await _preferences?.setBool(key, value);
   }
 
   // Get Methods
-  String? getString(String key) {
+  static String? getString(String key) {
     return _preferences?.getString(key);
   }
 
-  int? getInt(String key) {
+  static int? getInt(String key) {
     return _preferences?.getInt(key);
   }
 
-  bool? getBool(String key) {
+  static bool? getBool(String key) {
     return _preferences?.getBool(key);
   }
 
   // Remove a key
-  Future<void> remove(String key) async {
+  static Future<void> remove(String key) async {
     await _preferences?.remove(key);
   }
 
   // Clear all data
-  Future<void> clear() async {
+  static Future<void> clear() async {
     await _preferences?.clear();
   }
 }
