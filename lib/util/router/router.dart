@@ -5,13 +5,13 @@ import 'package:moneywise/screens/logIn/bloc/LogInBloc.dart';
 import 'package:moneywise/screens/signup/bloc/signup_screen_bloc.dart';
 
 import '../../Screens/addEditModule/ui/addEditScreen.dart';
+import '../../Screens/history/event/history_screen_event.dart';
 import '../../Screens/history/ui/history_screen.dart';
 import '../../Screens/landing/ui/langing_screen.dart';
 import '../../Screens/logIn/ui/logIn_screen.dart';
 import '../../Screens/signup/ui/signup_screen.dart';
 import '../../networking/historyApi.dart';
 import '../../screens/history/bloc/history_screen_bloc.dart';
-import '../../screens/history/state/history_screen_state.dart';
 import '../screen/login_signup_screen.dart';
 import '../screen/splash_screen.dart';
 

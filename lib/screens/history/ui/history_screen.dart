@@ -1,13 +1,16 @@
+
+
+
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../Screens/history/bloc/history_screen_bloc.dart';
+import '../../../Screens/history/event/history_screen_event.dart';
+import '../../../Screens/history/state/history_screen_state.dart';
 import '../../../networking/historyApi.dart';
 import '../../../util/screen/transaction_tile.dart';
-import '../bloc/history_screen_bloc.dart';
-import '../event/history_screen_event.dart';
-import '../state/history_screen_state.dart';
-
-
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});

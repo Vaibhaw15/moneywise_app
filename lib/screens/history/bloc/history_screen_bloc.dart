@@ -1,10 +1,13 @@
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import '../../../Screens/history/event/history_screen_event.dart';
+import '../../../Screens/history/state/history_screen_state.dart';
 import '../../../models/historyModel.dart';
 import '../../../networking/historyApi.dart';
 import '../../../packages/SharedPreferenceService.dart';
-import '../event/history_screen_event.dart';
-import '../state/history_screen_state.dart';
+
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final HistoryApi repository;
 
