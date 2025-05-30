@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../models/historyModel.dart';// Create a model for Transaction
+// Create a model for Transaction
 
 abstract class HistoryEvent extends Equatable {
   const HistoryEvent();

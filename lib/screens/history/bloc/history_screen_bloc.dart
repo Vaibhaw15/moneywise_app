@@ -1,9 +1,10 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:moneywise/screens/history/event/history_screen_event.dart';
+import 'package:moneywise/screens/history/state/history_screen_state.dart';
 
-import '../../../Screens/history/event/history_screen_event.dart';
-import '../../../Screens/history/state/history_screen_state.dart';
+
 import '../../../models/historyModel.dart';
 import '../../../networking/historyApi.dart';
 import '../../../packages/SharedPreferenceService.dart';

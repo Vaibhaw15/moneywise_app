@@ -1,5 +1,6 @@
 
-import '../../../Screens/history/event/history_screen_event.dart';
+import 'package:moneywise/screens/history/event/history_screen_event.dart';
+
 import '../../../models/historyModel.dart';
 
 

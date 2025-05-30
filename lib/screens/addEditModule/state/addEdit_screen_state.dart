@@ -25,6 +25,14 @@ class AddEditLoaded extends AddEditState{
   List<Object> get props => [incomeCategories,expenseCategories];
 }
 
+class AddEditSaved extends AddEditState{
+  final String message;
+  const AddEditSaved({required this.message});
+
+  @override
+  List<Object> get props => [];
+}
+
 class AddEditError extends AddEditState{
   final String message;
   const AddEditError(this.message);

@@ -1,20 +1,24 @@
+
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moneywise/networking/categoryApi.dart';
+import 'package:moneywise/networking/historyApi.dart';
+import 'package:moneywise/screens/addEditModule/bloc/addEdit_screen_bloc.dart';
+import 'package:moneywise/screens/addEditModule/event/addEdit_screen_event.dart';
+import 'package:moneywise/screens/addEditModule/ui/addEditScreen.dart';
+import 'package:moneywise/screens/history/bloc/history_screen_bloc.dart';
+import 'package:moneywise/screens/history/event/history_screen_event.dart';
+import 'package:moneywise/screens/history/ui/history_screen.dart';
+import 'package:moneywise/screens/landing/ui/langing_screen.dart';
 import 'package:moneywise/screens/logIn/bloc/LogInBloc.dart';
+import 'package:moneywise/screens/logIn/ui/logIn_screen.dart';
 import 'package:moneywise/screens/signup/bloc/signup_screen_bloc.dart';
-
-import '../../Screens/addEditModule/ui/addEditScreen.dart';
-import '../../Screens/history/event/history_screen_event.dart';
-import '../../Screens/history/ui/history_screen.dart';
-import '../../Screens/landing/ui/langing_screen.dart';
-import '../../Screens/logIn/ui/logIn_screen.dart';
-import '../../Screens/signup/ui/signup_screen.dart';
-import '../../networking/historyApi.dart';
-import '../../screens/history/bloc/history_screen_bloc.dart';
-import '../screen/login_signup_screen.dart';
-import '../screen/splash_screen.dart';
-
+import 'package:moneywise/screens/signup/ui/signup_screen.dart';
+import 'package:moneywise/util/screen/login_signup_screen.dart';
+import 'package:moneywise/util/screen/splash_screen.dart';
 
 class RouterConfiguration {
   static final GoRouter router = GoRouter(
@@ -57,7 +61,10 @@ class RouterConfiguration {
           GoRoute(
             path: '/addEditScreen',
             builder: (BuildContext context, GoRouterState state) {
-              return AddEditScreen();
+              return BlocProvider(
+                create: (_) => AddEditBloc(CategoryApi())..add(AddEditEventLoadCategories()),
+                child: const AddEditScreen(),
+              );
             },
           ),
           GoRoute(
