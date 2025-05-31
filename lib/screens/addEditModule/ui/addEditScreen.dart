@@ -17,7 +17,8 @@ import '../state/addEdit_screen_state.dart';
 class AddEditScreen extends StatefulWidget {
   final TransactionModel? transaction;
   final CategoryModel? category;
-  const AddEditScreen({super.key, this.transaction, this.category});
+  final bool isExpense;
+  const AddEditScreen({super.key, this.transaction, this.category, required this.isExpense});
 
   @override
   State<AddEditScreen> createState() => _AddTransactionPageState();
@@ -29,6 +30,7 @@ class _AddTransactionPageState extends State<AddEditScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController messageController = TextEditingController();
   CategoryModel? selectedCategory;
+  int? dateInt;
 
 
 
@@ -37,13 +39,12 @@ class _AddTransactionPageState extends State<AddEditScreen> {
     super.initState();
     if (widget.transaction != null && widget.category != null) {
       final txn = widget.transaction!;
-      isExpense = txn.txnCategoryId == 1;
+      isExpense = widget.isExpense;
       amountController.text = (txn.txnAmount ?? 0.0).toStringAsFixed(0);
-      dateController.text = txn.txnDate ?? _getCurrentDateFormatted1();
+      dateController.text = txn.txnDate ??"";
       messageController.text = txn.txnMessage ?? '';
       selectedCategory = widget.category;
-    } else {
-      dateController.text = _getCurrentDateFormatted1();
+      dateInt = txn.txnDateInt;
     }
   }
 
@@ -106,9 +107,26 @@ class _AddTransactionPageState extends State<AddEditScreen> {
                   const SizedBox(height: 16),
                   _buildCategoryDropdown(shownCategories),
                   const SizedBox(height: 16),
-                  CustomTextField(
-                      labelText: 'Date',
-                      controller: dateController),
+                  TextField(
+                    controller: dateController,
+                    readOnly: true,
+                    onTap: _selectDate,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Date",
+                      labelStyle: TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: Color(0xFF2E3829),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color(0xFF54D12B)),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
                   CustomTextField(
                       maxLines: 5,
@@ -230,9 +248,9 @@ class _AddTransactionPageState extends State<AddEditScreen> {
       userId: int.parse(SharedPreferenceService.getString("userId")!),
       txnAmount: amount.toInt(),
       txnCategoryId: category.id,
-      txnDate: date,
+      txnDate: dateController.text,
       txnMessage: note,
-      txnDateInt: int.parse(_getCurrentDateFormatted()),
+      txnDateInt: dateInt,
       isModify: isEdit ? 1 : 0,
       modifyCount: isEdit ? (widget.transaction?.modifyCount ?? 0) + 1 : 0,
     );
@@ -242,15 +260,40 @@ class _AddTransactionPageState extends State<AddEditScreen> {
     );
   }
 
-  String _getCurrentDateFormatted() {
-    final now = DateTime.now();
-    final formatter = DateFormat('yyyyMMdd');
-    return formatter.format(now);
-  }
+  Future<void> _selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.tryParse(dateController.text) ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF54D12B), // header background color
+              onPrimary: Colors.white, // header text color
+              onSurface: Colors.black, // body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: const Color(0xFF54D12B), // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
 
-  String _getCurrentDateFormatted1() {
-    final now = DateTime.now();
-    final formatter = DateFormat('yyyy-MM-dd');
-    return formatter.format(now);
+    if (picked != null && picked != DateTime.tryParse(dateController.text)) {
+      setState(() {
+        dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        dateInt = int.parse(DateFormat('yyyyMMdd').format(picked));
+      });
+    }
   }
 }
+
+
+
+

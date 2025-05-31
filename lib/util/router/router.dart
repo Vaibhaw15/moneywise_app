@@ -67,7 +67,7 @@ class RouterConfiguration {
               final args = state.extra as AddEditScreenArgs?;
               return BlocProvider(
                 create: (_) => AddEditBloc(CategoryApi())..add(AddEditEventLoadCategories()),
-                child: AddEditScreen(transaction: args?.transaction,category: args?.category),
+                child: AddEditScreen(transaction: args?.transaction,category: args?.category, isExpense: args?.isExpense ?? false),
               );
             },
           ),

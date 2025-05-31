@@ -67,7 +67,7 @@ class HistoryScreen extends StatelessWidget {
                         itemCount: transactions.length,
                         itemBuilder: (context, index) {
                           final tx = transactions[index];
-                          final isExpense = tx.categoryType == '1';
+                          final isExpense = tx.categoryTypeName == 'Expenses';
                           final transaction = TransactionModel(
                             id: tx.id,
                             userId: tx.userId,
@@ -92,6 +92,7 @@ class HistoryScreen extends StatelessWidget {
                                 extra: AddEditScreenArgs(
                                   transaction: transaction,
                                   category: matchedCategory,
+                                  isExpense: isExpense,
                                 ),
                               );
                             },

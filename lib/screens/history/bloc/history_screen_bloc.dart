@@ -47,11 +47,11 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
 
       // Compute income and expenses
       final income = transactions
-          .where((tx) => tx.categoryTypeName == 'Expenses')
+          .where((tx) => tx.categoryTypeName == 'Income')
           .fold<double>(0.0, (sum, tx) => sum + (tx.transactionAmount ?? 0.0));
 
       final expenses = transactions
-          .where((tx) => tx.categoryTypeName == 'Income')
+          .where((tx) => tx.categoryTypeName == 'Expenses')
           .fold<double>(0.0, (sum, tx) => sum + (tx.transactionAmount ?? 0.0));
 
       emit(HistoryLoaded(

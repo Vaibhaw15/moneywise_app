@@ -52,6 +52,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide.none,
         ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFF54D12B)),
+        ),
         contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
 
         suffixIcon: widget.isPassword
