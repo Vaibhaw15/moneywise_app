@@ -14,7 +14,8 @@ class HistoryApi {
 
   Future<List<HistoryModel>> getTransactionHistory({
     required String userId,
-    required String date,
+    required String startDate,
+    required String endDate,
     required String token,
   }) async {
     try {
@@ -24,7 +25,8 @@ class HistoryApi {
         "moneywise/transaction-history/get",
         queryParameters: {
           "userId": userId,
-          "date": date,
+          "startDate": startDate,
+          "endDate":endDate
         },
         options: Options(
           headers: {

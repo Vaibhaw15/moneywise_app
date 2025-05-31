@@ -269,10 +269,10 @@ class _AddTransactionPageState extends State<AddEditScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
+            colorScheme: const ColorScheme.dark(
               primary: Color(0xFF54D12B), // header background color
-              onPrimary: Colors.white, // header text color
-              onSurface: Colors.black, // body text color
+              onPrimary: Colors.black, // header text color
+              onSurface: Colors.white, // body text color
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(

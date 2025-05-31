@@ -115,13 +115,13 @@ class HistoryScreen extends StatelessWidget {
             },
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.push('/addEditScreen'); // Blank for new transaction
-          },
-          backgroundColor: Colors.greenAccent[400],
-          child: const Icon(Icons.add, color: Colors.black),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     context.push('/addEditScreen'); // Blank for new transaction
+        //   },
+        //   backgroundColor: Colors.greenAccent[400],
+        //   child: const Icon(Icons.add, color: Colors.black),
+        // ),
       ),
     );
   }

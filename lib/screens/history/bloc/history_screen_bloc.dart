@@ -35,10 +35,10 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
       }
 
       // Format date: "20250529"
-      final date = _getCurrentDateFormatted();
+      final date = getCurrentYearStartAndEndDates();
 
       // Call API
-      final response = await repository.getTransactionHistory(userId: userId,date: date, token: token);
+      final response = await repository.getTransactionHistory(userId: userId,startDate: date[0],endDate: date[1], token: token);
       final categoryResponse = await categoryRepository.getCategory();
 
       // Convert response to list of HistoryModel
@@ -65,10 +65,25 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     }
   }
 
-  String _getCurrentDateFormatted() {
+  List<String> getCurrentYearStartAndEndDates() {
     final now = DateTime.now();
-    final formatter = DateFormat('yyyyMMdd');
-    return formatter.format(now); // → "20250529"
+    final currentYear = now.year;
+
+    final startDate = DateTime(currentYear, 1, 1);
+    final endDate = DateTime(currentYear, 12, 31);
+
+    String formatDate(DateTime date) {
+      final year = date.year.toString();
+      final month = date.month.toString().padLeft(2, '0');
+      final day = date.day.toString().padLeft(2, '0');
+      return '$year$month$day';
+    }
+
+    return [
+      formatDate(startDate),
+      formatDate(endDate),
+    ];
   }
+
 }
 
