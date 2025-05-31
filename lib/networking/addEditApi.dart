@@ -12,7 +12,7 @@ class AddEditApi{
         "moneywise/transaction/addEdit",
         data: transaction.toJson(),
         options: Options(
-          responseType: ResponseType.plain, // 👈 Accept plain text like "SUCCESS"
+          responseType: ResponseType.plain,
         ),
       );
 

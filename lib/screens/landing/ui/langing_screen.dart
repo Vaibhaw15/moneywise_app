@@ -62,7 +62,7 @@ class LandingScreen extends StatelessWidget {
             backgroundColor: const Color(0xFF9BE37C),
             child: const Icon(Icons.add, color: Colors.black),
             onPressed: () {
-              context.push('/addEditScreen',extra: TransactionModel());
+              context.push('/addEditScreen');
             },
           ),
           body: SafeArea(

@@ -7,7 +7,7 @@ class ApiClient {
 
   ApiClient()
       : dio = Dio(BaseOptions(
-    baseUrl: 'https://moneywise-m08q.onrender.com/',
+    baseUrl: 'http://ec2-13-232-169-17.ap-south-1.compute.amazonaws.com:8080/',
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 10),
     headers: {

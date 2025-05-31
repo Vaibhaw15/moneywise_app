@@ -1,6 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:moneywise/networking/categoryApi.dart';
 import 'package:moneywise/screens/history/event/history_screen_event.dart';
 import 'package:moneywise/screens/history/state/history_screen_state.dart';
 
@@ -11,8 +12,9 @@ import '../../../packages/SharedPreferenceService.dart';
 
 class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final HistoryApi repository;
+  final CategoryApi categoryRepository;
 
-  HistoryBloc(this.repository) : super(HistoryInitial()) {
+  HistoryBloc(this.repository,this.categoryRepository) : super(HistoryInitial()) {
     on<LoadTransactionHistory>(_onLoadTransactions);
   }
 
@@ -37,6 +39,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
 
       // Call API
       final response = await repository.getTransactionHistory(userId: userId,date: date, token: token);
+      final categoryResponse = await categoryRepository.getCategory();
 
       // Convert response to list of HistoryModel
       final List<HistoryModel> transactions = response;
@@ -44,20 +47,21 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
 
       // Compute income and expenses
       final income = transactions
-          .where((tx) => tx.categoryType == '2')
+          .where((tx) => tx.categoryTypeName == 'Expenses')
           .fold<double>(0.0, (sum, tx) => sum + (tx.transactionAmount ?? 0.0));
 
       final expenses = transactions
-          .where((tx) => tx.categoryType == '1')
+          .where((tx) => tx.categoryTypeName == 'Income')
           .fold<double>(0.0, (sum, tx) => sum + (tx.transactionAmount ?? 0.0));
 
       emit(HistoryLoaded(
         transactions: transactions,
         income: income,
         expenses: expenses,
+        category: categoryResponse,
       ));
     } catch (e) {
-      emit(HistoryError('Failed to load transactions: $e'));
+      emit(HistoryError('No Data Found'));
     }
   }
 

@@ -4,6 +4,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:moneywise/models/categoryModel.dart';
+import 'package:moneywise/models/transactionModel.dart';
 import 'package:moneywise/networking/categoryApi.dart';
 import 'package:moneywise/networking/historyApi.dart';
 import 'package:moneywise/screens/addEditModule/bloc/addEdit_screen_bloc.dart';
@@ -17,6 +19,7 @@ import 'package:moneywise/screens/logIn/bloc/LogInBloc.dart';
 import 'package:moneywise/screens/logIn/ui/logIn_screen.dart';
 import 'package:moneywise/screens/signup/bloc/signup_screen_bloc.dart';
 import 'package:moneywise/screens/signup/ui/signup_screen.dart';
+import 'package:moneywise/util/addEditDataWraper.dart';
 import 'package:moneywise/util/screen/login_signup_screen.dart';
 import 'package:moneywise/util/screen/splash_screen.dart';
 
@@ -61,9 +64,10 @@ class RouterConfiguration {
           GoRoute(
             path: '/addEditScreen',
             builder: (BuildContext context, GoRouterState state) {
+              final args = state.extra as AddEditScreenArgs?;
               return BlocProvider(
                 create: (_) => AddEditBloc(CategoryApi())..add(AddEditEventLoadCategories()),
-                child: const AddEditScreen(),
+                child: AddEditScreen(transaction: args?.transaction,category: args?.category),
               );
             },
           ),
@@ -71,7 +75,7 @@ class RouterConfiguration {
             path: '/historyScreen',
             builder: (BuildContext context, GoRouterState state) {
               return BlocProvider(
-                create: (_) => HistoryBloc(HistoryApi())..add(LoadTransactionHistory()),
+                create: (_) => HistoryBloc(HistoryApi(),CategoryApi())..add(LoadTransactionHistory()),
                 child: const HistoryScreen(),
               );
             },

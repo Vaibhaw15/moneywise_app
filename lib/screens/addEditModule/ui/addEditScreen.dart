@@ -15,7 +15,9 @@ import '../state/addEdit_screen_state.dart';
 
 
 class AddEditScreen extends StatefulWidget {
-  const AddEditScreen({super.key});
+  final TransactionModel? transaction;
+  final CategoryModel? category;
+  const AddEditScreen({super.key, this.transaction, this.category});
 
   @override
   State<AddEditScreen> createState() => _AddTransactionPageState();
@@ -23,10 +25,27 @@ class AddEditScreen extends StatefulWidget {
 
 class _AddTransactionPageState extends State<AddEditScreen> {
   bool isExpense = true;
-  final TextEditingController amountController = TextEditingController();
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController messageController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
   CategoryModel? selectedCategory;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.transaction != null && widget.category != null) {
+      final txn = widget.transaction!;
+      isExpense = txn.txnCategoryId == 1;
+      amountController.text = (txn.txnAmount ?? 0.0).toStringAsFixed(0);
+      dateController.text = txn.txnDate ?? _getCurrentDateFormatted1();
+      messageController.text = txn.txnMessage ?? '';
+      selectedCategory = widget.category;
+    } else {
+      dateController.text = _getCurrentDateFormatted1();
+    }
+  }
 
 
   @override
@@ -37,7 +56,7 @@ class _AddTransactionPageState extends State<AddEditScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
-          context.pop();
+          context.go('/landing');
         } else if (state is AddEditError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
@@ -60,28 +79,36 @@ class _AddTransactionPageState extends State<AddEditScreen> {
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.close, color: Colors.white),
-                onPressed: () {
-                  context.pop();
-                },
+                onPressed: () => context.pop(),
               ),
               centerTitle: true,
-              title: const Text("Add Transaction", style: TextStyle(color: Colors.white)),
+              title: Text(
+                widget.transaction == null ? 'Add Transaction' : 'Edit Transaction',
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
             body: state is AddEditLoading
                 ? const Center(child: CircularProgressIndicator())
                 : state is AddEditError
-                ? Center(child: Text(state.message, style: const TextStyle(color: Colors.red)))
+                ? Center(
+              child: Text(state.message,
+                  style: const TextStyle(color: Colors.red)),
+            )
                 : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  CustomTextField(labelText: 'Amount', controller: amountController),
+                  CustomTextField(
+                      labelText: 'Amount',
+                      controller: amountController),
                   const SizedBox(height: 16),
                   _buildToggleButtons(),
                   const SizedBox(height: 16),
                   _buildCategoryDropdown(shownCategories),
                   const SizedBox(height: 16),
-                  CustomTextField(labelText: 'Date', controller: dateController),
+                  CustomTextField(
+                      labelText: 'Date',
+                      controller: dateController),
                   const SizedBox(height: 16),
                   CustomTextField(
                       maxLines: 5,
@@ -89,11 +116,10 @@ class _AddTransactionPageState extends State<AddEditScreen> {
                       controller: messageController),
                   const Spacer(),
                   CustomButton(
-                      text: "Save",
-                      color: const Color(0xFF54D12B),
-                      onPressed: () {
-                        _saveTransaction();
-                      }),
+                    text: widget.transaction == null ? "Save" : "Update",
+                    color: const Color(0xFF54D12B),
+                    onPressed: _saveTransaction,
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -159,8 +185,11 @@ class _AddTransactionPageState extends State<AddEditScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4),
         child: DropdownButtonFormField<int>(
           dropdownColor: const Color(0xFF2E3829),
-          value: selectedCategory?.id,
-          hint: const Text('Category', style: TextStyle(color: Colors.white70)),
+          value: categoryList.any((cat) => cat.id == selectedCategory?.id)
+              ? selectedCategory?.id
+              : null,
+          hint:
+          const Text('Category', style: TextStyle(color: Colors.white70)),
           icon: const Icon(Icons.arrow_drop_down, color: Colors.white70),
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(border: InputBorder.none),
@@ -181,7 +210,6 @@ class _AddTransactionPageState extends State<AddEditScreen> {
     );
   }
 
-
   void _saveTransaction() {
     final amount = double.tryParse(amountController.text);
     final date = dateController.text;
@@ -195,25 +223,29 @@ class _AddTransactionPageState extends State<AddEditScreen> {
       return;
     }
 
+    final isEdit = widget.transaction != null;
+
+    final txnModel = TransactionModel(
+      id: widget.transaction?.id,
+      userId: int.parse(SharedPreferenceService.getString("userId")!),
+      txnAmount: amount.toInt(),
+      txnCategoryId: category.id,
+      txnDate: date,
+      txnMessage: note,
+      txnDateInt: int.parse(_getCurrentDateFormatted()),
+      isModify: isEdit ? 1 : 0,
+      modifyCount: isEdit ? (widget.transaction?.modifyCount ?? 0) + 1 : 0,
+    );
+
     context.read<AddEditBloc>().add(
-      AddEditSaveTransactionEvent(TransactionModel.withoutId(
-        userId: int.parse(SharedPreferenceService.getString("userId")!),
-        txnAmount: int.parse(amount.toStringAsFixed(2).replaceAll('.', '')),
-        txnCategoryId: category.id,
-        txnDate: _getCurrentDateFormatted1(),
-        txnMessage: note,
-        txnDateInt: int.parse(_getCurrentDateFormatted()),
-        isModify: 0,
-        modifyCount: 0,
-      )
-      ),
+      AddEditSaveTransactionEvent(txnModel),
     );
   }
 
   String _getCurrentDateFormatted() {
     final now = DateTime.now();
     final formatter = DateFormat('yyyyMMdd');
-    return formatter.format(now); // → "20250529"
+    return formatter.format(now);
   }
 
   String _getCurrentDateFormatted1() {
